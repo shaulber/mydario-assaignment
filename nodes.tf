@@ -32,8 +32,8 @@ resource "aws_eks_node_group" "mydario-assignment-worker-node-group" {
     node_role_arn   = aws_iam_role.mydario-assignment-workernodes.arn
 
     subnet_ids = [
-        var.subnet_id_1,
-        var.subnet_id_2
+      aws_subnet.private-us-east-1a.id,
+      aws_subnet.private-us-east-1b.id
     ]
     
     instance_types = ["t3.small"]
