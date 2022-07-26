@@ -32,16 +32,23 @@ resource "aws_eks_node_group" "mydario-assignment-worker-node-group" {
     node_role_arn   = aws_iam_role.mydario-assignment-workernodes.arn
 
     subnet_ids = [
-      aws_subnet.private-us-east-1a.id,
-      aws_subnet.private-us-east-1b.id
+      aws_subnet.public-us-east-1a.id,
+      aws_subnet.public-us-east-1b.id
     ]
-    
+
+    capacity_type  = "ON_DEMAND"
     instance_types = ["t3.small"]
     
     scaling_config {
         desired_size = 1
         max_size     = 1
         min_size     = 1
+    }
+    update_config {
+      max_unavailable = 1
+    }
+    labels = {
+      role = "general"
     }
 
     depends_on = [

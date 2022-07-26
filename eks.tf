@@ -1,8 +1,6 @@
 resource "aws_iam_role" "mydario-assignment-iam-role" {
  name = "mydario-assignment-iam-role"
 
- path = "/"
-
  assume_role_policy = <<POLICY
 {
  "Version": "2012-10-17",
@@ -26,7 +24,7 @@ resource "aws_iam_role_policy_attachment" "mydario-assignment-AmazonEKSClusterPo
 }
 
 resource "aws_eks_cluster" "mydario-assignment-eks" {
-  name     = "mydario-assignment-eks"
+  name     = var.cluster_name
   role_arn = aws_iam_role.mydario-assignment-iam-role.arn
 
   vpc_config {
@@ -39,4 +37,12 @@ resource "aws_eks_cluster" "mydario-assignment-eks" {
   }
 
   depends_on = [aws_iam_role_policy_attachment.mydario-assignment-AmazonEKSClusterPolicy]
+
+  enabled_cluster_log_types = ["api", "audit"]
+
+}
+
+resource "aws_cloudwatch_log_group" "mydario-log" {
+  name              = "/aws/eks/${var.cluster_name}/cluster"
+  retention_in_days = 7 
 }
